@@ -4,18 +4,16 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use App\Models\Item;
-use App\Models\Category;
-
-class ItemController extends Controller
+use App\Models\Payment;
+class PaymentController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $items = Item::orderBy('id','DESC')->paginate(15);
-        return view('admin.items.index',compact('items'));
+        $payments = Payment::orderBy('id','DESC')->paginate(15);
+        return view('admin.payments.index',compact('payments'));
     }
 
     /**
@@ -23,8 +21,7 @@ class ItemController extends Controller
      */
     public function create()
     {
-        $categories = Category::all();
-        return view('admin.items.create',compact('categories'));
+        return view('admin.payments.create');
     }
 
     /**
@@ -33,9 +30,9 @@ class ItemController extends Controller
     public function store(Request $request)
     {
         //dd($request);
-        $items = Item::create($request->all());
-        $items->save();
-        return redirect()->route('backend.items.index');
+        $payments = Payment::create($request->all());
+        $payments->save();
+        return redirect()->route('backend.payments.index');
     }
 
     /**
