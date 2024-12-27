@@ -18,8 +18,10 @@ class FrontController extends Controller
 
     public function shopItem($id){
         $item = Item::find($id);
+        $category_id = $item->category_id;
+        $related_items = Item::where('category_id',$category_id)->where('id','!=',$id)->orderBy('id','DESC')->limit(4)->get();
         
-        return view('front.shop-item',compact('item'));
+        return view('front.shop-item',compact('item','related_items'));
     }
     public function carts(){
         $payments = Payment::all();
@@ -48,7 +50,7 @@ class FrontController extends Controller
             $order->qty = $data->qty;
             $order->payment_slip = '/images/payment_slip/'.$file_name;
             $order->status = "Pending";
-            $order->note = $request->note;
+            $order->address = $request->address;
             $order->item_id = $data->id;
             $order->payment_id = $request->payment_method;
             $order->user_id = Auth::id();
@@ -57,6 +59,12 @@ class FrontController extends Controller
 
         return 'Your Order Succeesful';
 
+
+    }
+
+    public function itemCategory($category_id){
+        $items = Item::where('category_id',$category_id)->orderBy('id','DESC')->paginate(8);
+        return view('front.item-category',compact('items'));
 
     }
 }
